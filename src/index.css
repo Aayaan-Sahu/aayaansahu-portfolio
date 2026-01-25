@@ -1,2 +1,533 @@
 @import "tailwindcss";
-@custom-variant dark (&:where(.dark, .dark *));
+
+/* ========================================
+   GLASS ARCHITECT THEME
+   Premium glassmorphism portfolio styling
+   ======================================== */
+
+/* Custom CSS Properties */
+:root {
+    /* Colors */
+    --color-void: #0F1115;
+    --color-void-lighter: #1a1d24;
+    --color-text-primary: #F3F4F6;
+    --color-text-secondary: #9CA3AF;
+    --color-lavender: #E0B0FF;
+    --color-mint: #98FF98;
+
+    /* Glass effects */
+    --glass-bg: rgba(255, 255, 255, 0.03);
+    --glass-border: rgba(255, 255, 255, 0.08);
+    --glass-border-hover: rgba(255, 255, 255, 0.2);
+
+    /* Typography */
+    --font-heading: 'Manrope', sans-serif;
+    --font-body: 'Inter', sans-serif;
+}
+
+/* Base Styles - Using @layer to properly cascade over Tailwind */
+@layer base {
+    html {
+        scroll-behavior: smooth;
+        background-color: var(--color-void);
+    }
+
+    body {
+        font-family: var(--font-body);
+        background-color: var(--color-void) !important;
+        color: var(--color-text-primary) !important;
+        min-height: 100vh;
+        overflow-x: hidden;
+        cursor: none;
+    }
+
+    #root {
+        background-color: transparent !important;
+    }
+
+    /* Hide cursor on all elements */
+    *,
+    *::before,
+    *::after {
+        cursor: none !important;
+    }
+}
+
+/* ========================================
+   CUSTOM CURSOR
+   ======================================== */
+
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 12px;
+    height: 12px;
+    background: var(--color-lavender);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s ease, height 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 0 20px var(--color-lavender), 0 0 40px rgba(224, 176, 255, 0.4);
+    mix-blend-mode: screen;
+}
+
+.cursor-dot.cursor-hover {
+    width: 24px;
+    height: 24px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px solid var(--color-lavender);
+    box-shadow: 0 0 30px var(--color-lavender), 0 0 60px rgba(224, 176, 255, 0.5);
+}
+
+/* Hide custom cursor on mobile/touch devices */
+@media (hover: none) and (pointer: coarse) {
+
+    .cursor-dot {
+        display: none !important;
+    }
+
+    body,
+    *,
+    *::before,
+    *::after {
+        cursor: auto !important;
+    }
+}
+
+/* ========================================
+   AMBIENT BACKGROUND ORBS
+   ======================================== */
+
+.ambient-background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(100px);
+    opacity: 0.4;
+}
+
+.orb-1 {
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, var(--color-lavender) 0%, transparent 70%);
+    top: -200px;
+    right: -100px;
+    animation: float-1 20s ease-in-out infinite;
+}
+
+.orb-2 {
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, var(--color-mint) 0%, transparent 70%);
+    bottom: -150px;
+    left: -100px;
+    animation: float-2 25s ease-in-out infinite;
+}
+
+.orb-3 {
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, var(--color-lavender) 0%, transparent 70%);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    animation: float-3 30s ease-in-out infinite;
+    opacity: 0.2;
+}
+
+@keyframes float-1 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(-30px, 50px) scale(1.05);
+    }
+
+    66% {
+        transform: translate(20px, -30px) scale(0.95);
+    }
+}
+
+@keyframes float-2 {
+
+    0%,
+    100% {
+        transform: translate(0, 0) scale(1);
+    }
+
+    33% {
+        transform: translate(40px, -40px) scale(0.95);
+    }
+
+    66% {
+        transform: translate(-20px, 30px) scale(1.05);
+    }
+}
+
+@keyframes float-3 {
+
+    0%,
+    100% {
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    50% {
+        transform: translate(-50%, -50%) scale(1.2);
+    }
+}
+
+/* ========================================
+   GLASS UTILITIES
+   ======================================== */
+
+.glass-panel {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1.5rem;
+}
+
+.glass-card {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0) 100%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    border-color: var(--glass-border-hover);
+    box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.05);
+}
+
+.glass-nav {
+    background: var(--glass-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--glass-border);
+    border-radius: 9999px;
+}
+
+/* Glass Buttons */
+.glass-button {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 9999px;
+    padding: 0.625rem 1.5rem;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.glass-button:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.glass-button-primary {
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.glass-button-primary:hover {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.5);
+}
+
+/* Ice Chip (skill tags) */
+.ice-chip {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--glass-border);
+    border-radius: 0.5rem;
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    transition: all 0.3s ease;
+}
+
+.ice-chip:hover {
+    border-color: var(--color-mint);
+    box-shadow: 0 0 15px rgba(152, 255, 152, 0.2);
+}
+
+/* ========================================
+   TYPOGRAPHY
+   ======================================== */
+
+.heading-xl {
+    font-family: var(--font-heading);
+    font-size: clamp(3rem, 8vw, 5rem);
+    font-weight: 300;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+}
+
+.heading-lg {
+    font-family: var(--font-heading);
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 400;
+    line-height: 1.2;
+}
+
+.heading-md {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.text-gradient {
+    background: linear-gradient(135deg, var(--color-lavender), var(--color-mint));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.text-lavender {
+    color: var(--color-lavender);
+}
+
+.text-secondary {
+    color: var(--color-text-secondary);
+}
+
+.label-uppercase {
+    font-family: var(--font-heading);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--color-lavender);
+}
+
+/* ========================================
+   ANIMATIONS
+   ======================================== */
+
+/* Staggered blur-fade reveal for hero */
+@keyframes blur-fade-in {
+    from {
+        opacity: 0;
+        filter: blur(10px);
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: translateY(0);
+    }
+}
+
+.animate-blur-fade {
+    animation: blur-fade-in 0.8s ease-out forwards;
+    opacity: 0;
+}
+
+.animate-delay-1 {
+    animation-delay: 0.1s;
+}
+
+.animate-delay-2 {
+    animation-delay: 0.2s;
+}
+
+.animate-delay-3 {
+    animation-delay: 0.3s;
+}
+
+.animate-delay-4 {
+    animation-delay: 0.4s;
+}
+
+.animate-delay-5 {
+    animation-delay: 0.5s;
+}
+
+/* Glass Up scroll reveal */
+@keyframes glass-up {
+    from {
+        opacity: 0;
+        filter: blur(5px);
+        transform: scale(0.95) translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        filter: blur(0);
+        transform: scale(1) translateY(0);
+    }
+}
+
+.glass-up {
+    animation: glass-up 0.6s ease-out forwards;
+}
+
+/* Pulse animation for scroll indicator */
+@keyframes pulse-soft {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: translateY(0);
+    }
+
+    50% {
+        opacity: 1;
+        transform: translateY(5px);
+    }
+}
+
+.animate-pulse-soft {
+    animation: pulse-soft 2s ease-in-out infinite;
+}
+
+/* Glowing dot for experience bullets */
+.glow-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--color-mint);
+    box-shadow: 0 0 10px var(--color-mint), 0 0 20px rgba(152, 255, 152, 0.3);
+    flex-shrink: 0;
+}
+
+/* ========================================
+   PROJECT IMAGES
+   ======================================== */
+
+.project-image {
+    filter: grayscale(100%);
+    transition: filter 0.5s ease;
+}
+
+.project-image:hover {
+    filter: grayscale(0%);
+}
+
+/* ========================================
+   NAV LINK HOVER
+   ======================================== */
+
+.nav-link {
+    position: relative;
+    padding: 0.5rem 1rem;
+    font-family: var(--font-heading);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+    transition: all 0.3s ease;
+    border-radius: 9999px;
+}
+
+.nav-link:hover {
+    color: var(--color-text-primary);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Text link with expanding underline */
+.text-link {
+    position: relative;
+    color: var(--color-text-secondary);
+    transition: color 0.3s ease;
+}
+
+.text-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--color-text-primary);
+    transition: width 0.3s ease;
+}
+
+.text-link:hover {
+    color: var(--color-text-primary);
+}
+
+.text-link:hover::after {
+    width: 100%;
+}
+
+/* ========================================
+   CONTACT BUTTON GRADIENT
+   ======================================== */
+
+.gradient-button {
+    background: linear-gradient(135deg, rgba(224, 176, 255, 0.2), rgba(152, 255, 152, 0.2));
+    border: 1px solid var(--glass-border);
+    border-radius: 0.75rem;
+    padding: 1rem 2rem;
+    font-family: var(--font-heading);
+    font-weight: 500;
+    color: var(--color-text-primary);
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.gradient-button:hover {
+    background: linear-gradient(135deg, rgba(224, 176, 255, 0.35), rgba(152, 255, 152, 0.35));
+    border-color: var(--glass-border-hover);
+}
+
+/* ========================================
+   RESPONSIVE - Mobile static orbs
+   ======================================== */
+
+@media (max-width: 768px) {
+    .orb {
+        animation: none !important;
+    }
+
+    .orb-1 {
+        width: 300px;
+        height: 300px;
+        top: -100px;
+        right: -50px;
+    }
+
+    .orb-2 {
+        width: 250px;
+        height: 250px;
+        bottom: -75px;
+        left: -50px;
+    }
+
+    .orb-3 {
+        display: none;
+    }
+}
+
+/* Section spacing */
+.section {
+    padding-top: 8rem;
+    padding-bottom: 8rem;
+}
+
+@media (min-width: 768px) {
+    .section {
+        padding-top: 10rem;
+        padding-bottom: 10rem;
+    }
+}
