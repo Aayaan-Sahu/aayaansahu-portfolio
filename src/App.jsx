@@ -2,9 +2,21 @@ import { useState } from 'react';
 
 const experiences = [
   {
+    company: 'Computer Vision Robotics Lab @ UIUC',
+    role: 'Researcher',
+    period: 'Feb 2026 - Present',
+    tech: ['PyTorch', 'GAN', 'Diffusion', 'ResNet'],
+    description: [
+      'Researching concept editing in latent spaces of generative models',
+      'Isolated concept vectors using TCAV, ACE, ICE and visualized with gradient optimization and MACO',
+      'Modifying StyleGan2 architecture to enable controlled concept editing',
+    ],
+  },
+  {
     company: 'Operation Safe Escape',
     role: 'Software Engineer',
     period: 'Sep 2025 - Dec 2025',
+    tech: ['React', 'Django', 'WebSockets', 'Encryption'],
     description: [
       'Operation Safe Escape has helped 700+ survivors of domestic violence',
       'Built a Google Form-esque dynamic form builder using React and Django',
@@ -15,6 +27,7 @@ const experiences = [
     company: 'Analyzing Bias in Emergency Room Triaging',
     role: 'Researcher',
     period: 'Jun 2021 - Dec 2022',
+    tech: ['Python', 'XGBoost', 'Neural Networks', 'SHAP'],
     description: [
       'Biases are a significant problem in the US medical system',
       'Trained accurate XGBoost models and neural networks to predict triage outcomes',
@@ -25,9 +38,9 @@ const experiences = [
 
 const projects = [
   {
-    title: 'LLMBDA',
+    title: 'LLMBDA λ',
     description:
-      'LLMBDA is a AI prompt engineering platform that helps users refine prompts and optimize tokens.',
+      'Prompt engineering that saves money',
     tech: ['Python', 'FastAPI', 'Supabase', 'React', 'TypeScript'],
     image: '/LLMBDA.png',
     github: '#',
@@ -36,9 +49,31 @@ const projects = [
     accent: '#98c379',
   },
   {
+    title: 'PRISM 🔊',
+    description:
+      'Real-time filtering of voices for deaf and hard-of-hearing individuals',
+    tech: ['Python', 'Modal', 'Signal_Processing'],
+    image: '/LLMBDA.png',
+    github: 'https://github.com/Aayaan-Sahu/PRISM',
+    live: '#',
+    badge: 'LIVE_STATUS // OK',
+    accent: '#98c379',
+  },
+  {
+    title: 'kova 🤖',
+    description:
+      'Real-time scam call detection agent',
+    tech: ['Python', 'FastAPI', 'LangGraph', 'TypeScript'],
+    image: '/PORTL.png',
+    github: 'https://github.com/Aayaan-Sahu/kova',
+    live: '#',
+    badge: 'BETA_RELEASE',
+    accent: '#c678dd',
+  },
+  {
     title: 'PORTL 🌀',
     description:
-      'PORTL is a real-time file sharing web application that allows users to share files instantly, powered by WebSockets and WebRTC.',
+      'Real-time file sharing powered by WebSockets and WebRTC.',
     tech: ['Python', 'FastAPI', 'React', 'TypeScript', 'WebSockets', 'WebRTC'],
     image: '/PORTL.png',
     github: 'https://github.com/Aayaan-Sahu/PORTL',
@@ -79,26 +114,15 @@ const navItems = [
   { id: 'projects', label: 'PROJECTS' },
   { id: 'experience', label: 'EXPERIENCE' },
   // { id: 'tech', label: 'TECH_STACK' },
-  { id: 'contact', label: 'COMMAND_CENTER' },
-];
-
-const railItems = [
-  { icon: '▣', label: 'OBJ_327' },
-  { icon: '⟳', label: 'CLS_582' },
-  { icon: '◈', label: 'SSL_019' },
-  { icon: '◎', label: 'DL_239' },
-];
-
-const stats = [
-  { value: '05+', label: 'years of exp' },
-  { value: '500k+', label: 'lines of code' },
+  { id: 'contact', label: 'CONTACT' },
 ];
 
 const panelClass =
   'border border-[#3e4451] bg-[#21252b]/95 shadow-[0_24px_70px_rgba(0,0,0,0.24)]';
 const monoClass = "font-['JetBrains_Mono'] uppercase tracking-[0.22em]";
 const displayClass = "font-['Space_Grotesk']";
-const bodyClass = "font-['Inter']";
+const readingClass = "font-['Inter']";
+const bodyClass = "font-['JetBrains_Mono']";
 
 const Icons = {
   mail: () => (
@@ -230,52 +254,12 @@ function App() {
       <div className="pointer-events-none fixed inset-0 bg-[#282c34]" />
       <div className="pointer-events-none fixed inset-0 opacity-40 [background-image:radial-gradient(circle,rgba(92,99,112,0.45)_1px,transparent_1px)] [background-size:18px_18px]" />
 
-      <aside
-        className={`fixed left-0 top-0 z-40 hidden h-screen w-[62px] flex-col items-center border-r border-[#3e4451] bg-[#21252b] px-2 py-4 lg:flex`}
-      >
-        <div className="flex flex-col items-center gap-4">
-          <div className="grid size-8 place-items-center border border-[#61afef]/30 bg-[#61afef]/10 text-[9px] text-[#61afef]">
-            AS
-          </div>
-          <div className={`text-[6px] text-[#5c6370] ${monoClass}`}>operator</div>
-        </div>
-
-        <div className="mt-8 flex flex-1 flex-col items-center gap-5">
-          {railItems.map((item, index) => (
-            <div className="flex flex-col items-center gap-1" key={item.label}>
-              <div className="grid size-9 place-items-center border border-[#3e4451] bg-[#2c313a] text-[10px] text-[#61afef]">
-                {index === 0 ? (
-                  <div className="grid size-4 place-items-center border border-[#61afef] text-[7px]">
-                    {item.icon}
-                  </div>
-                ) : (
-                  item.icon
-                )}
-              </div>
-              <div className={`text-[6px] text-[#5c6370] ${monoClass}`}>{item.label}</div>
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-auto flex flex-col items-center gap-3">
-          <div className={`text-[6px] text-[#5c6370] ${monoClass}`}>active</div>
-          <a
-            href="mailto:aasahu2@illinois.edu"
-            className="grid size-8 place-items-center rounded-full border border-[#3e4451] bg-[#2c313a] text-[#61afef] transition hover:border-[#61afef]/60 hover:text-[#8abcf2]"
-          >
-            <Icons.mail />
-          </a>
-        </div>
-      </aside>
-
-      <div className="relative z-10 lg:pl-[62px]">
+      <div className="relative z-10">
         <header className="sticky top-0 z-30 border-b border-[#3e4451] bg-[#282c34]/90 backdrop-blur-xl">
-          <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-            <a href="#top" className={`text-sm text-[#61afef] ${displayClass} font-bold tracking-[0.18em]`}>
-              TERMINAL_01
-            </a>
+          <div className="mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
+            <div />
 
-            <nav className="hidden items-center gap-6 md:flex">
+            <nav className="hidden items-center justify-center gap-6 md:flex">
               {navItems.map((item, index) => (
                 <button
                   key={item.id}
@@ -292,14 +276,14 @@ function App() {
               ))}
             </nav>
 
-            <div className="flex items-center gap-3">
+            <div className="flex items-center justify-end gap-3">
               <a
                 href="/Resume.pdf"
                 target="_blank"
                 rel="noreferrer"
                 className={`hidden border border-[#61afef] bg-[#61afef] px-4 py-2 text-[10px] text-[#282c34] transition hover:bg-[#8abcf2] sm:inline-flex ${monoClass}`}
               >
-                CONNECT
+                RESUME
               </a>
 
               <button
@@ -341,7 +325,7 @@ function App() {
               <div
                 className={`mx-auto inline-flex items-center border border-[#c678dd]/40 bg-[#c678dd]/8 px-3 py-1 text-[9px] text-[#c678dd] ${monoClass}`}
               >
-                SYSTEM_STATUS: READY
+                GRADUATING: 2028
               </div>
 
               <h1
@@ -376,88 +360,24 @@ function App() {
             </div>
           </section>
 
-          {/* <section className="border-t border-[#3e4451] bg-[#2c313a]/40" id="about">
-            <div className="mx-auto max-w-[1280px] px-4 py-10 sm:px-6 lg:px-8">
-              <div className="grid gap-8 lg:grid-cols-[minmax(320px,1fr)_minmax(0,1.2fr)] lg:items-start">
-                <div className={`p-3 ${panelClass}`}>
-                  <div className="relative min-h-[360px] border border-[#3e4451] bg-[#0f1115] p-4">
-                    <div className={`absolute left-4 top-4 text-[8px] text-[#98c379] ${monoClass}`}>
-                      05: DEVICE_LINKED
-                    </div>
-                    <div
-                      className={`flex min-h-[320px] items-center justify-center text-[clamp(4.5rem,12vw,8rem)] font-medium tracking-[-0.12em] text-[#d7dae0]/70 ${displayClass}`}
-                    >
-                      AS
-                    </div>
-                    <div
-                      className={`absolute bottom-4 left-4 border border-[#3e4451] bg-[#21252b]/90 px-3 py-2 text-[8px] text-[#abb2bf] ${monoClass}`}
-                    >
-                      OS: DRIVE_LAUNCH
-                      <br />
-                      KERNEL: 2.4.4
-                    </div>
-                  </div>
-                </div>
-
-                <div className="pt-2">
-                  <div className={`text-[10px] text-[#c678dd] ${monoClass}`}>__ ABOUT_ME</div>
-                  <h2
-                    className={`mt-4 max-w-[520px] text-3xl font-bold leading-tight text-[#d7dae0] sm:text-4xl ${displayClass}`}
-                  >
-                    Just a laptop, Wi-Fi, and an unhealthy urge to ship stuff.
-                  </h2>
-
-                  <div className="mt-6 max-w-[560px] space-y-4 text-sm leading-7 text-[#5c6370]">
-                    <p>
-                      I&apos;m a Computer Science and Economics student at the University of Illinois
-                      Urbana-Champaign with a passion for creating impactful technology solutions.
-                    </p>
-                    <p>
-                      My journey in tech started with building simple websites and has evolved into
-                      developing full-stack applications, working with machine learning models, and
-                      contributing to open-source projects.
-                    </p>
-                    <p>
-                      When I&apos;m not coding, you&apos;ll find me at the gym, hanging out with my
-                      friends, listening to music, or doing all of them at the same time.
-                    </p>
-                  </div>
-
-                  <div className="mt-10 grid gap-8 sm:grid-cols-2">
-                    {stats.map((stat) => (
-                      <div key={stat.label}>
-                        <div className={`text-3xl font-bold text-[#61afef] ${displayClass}`}>
-                          {stat.value}
-                        </div>
-                        <div className={`mt-1 text-[8px] text-[#5c6370] ${monoClass}`}>
-                          {stat.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section> */}
-
           <section className="border-t border-[#3e4451]" id="projects">
             <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
               <div className="mb-8 flex items-end justify-between gap-4">
                 <div>
                   <div className={`text-[10px] text-[#61afef] ${monoClass}`}>SELECTED_PROJECTS</div>
-                  <h2 className={`mt-3 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0] ${displayClass}`}>
+                  <h2 className="mt-3 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0]">
                     PROJECTS
                   </h2>
                 </div>
 
-                <div className="grid size-10 place-items-center border border-[#3e4451] bg-[#21252b] text-[#abb2bf]">
-                  <Icons.filter />
-                </div>
               </div>
 
               <div className="grid gap-6 lg:grid-cols-2">
                 {projects.map((project) => (
-                  <article key={project.title} className={`group hover-pop-card overflow-hidden ${panelClass}`}>
+                  <article
+                    key={project.title}
+                    className={`group hover-pop-card flex h-full flex-col overflow-hidden ${panelClass}`}
+                  >
                     <div className="relative h-[300px] overflow-hidden border-b border-[#3e4451] bg-[#1b1d23]">
                       <img
                         src={project.image}
@@ -465,20 +385,10 @@ function App() {
                         className="h-full w-full object-cover grayscale transition duration-300 group-hover:grayscale-0 group-focus-within:grayscale-0"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#21252b] via-[#21252b]/30 to-transparent" />
-                      {/* <div
-                        className={`absolute right-4 top-4 border px-2 py-1 text-[8px] ${monoClass}`}
-                        style={{
-                          borderColor: `${project.accent}55`,
-                          backgroundColor: `${project.accent}12`,
-                          color: project.accent,
-                        }}
-                      >
-                        {project.badge}
-                      </div> */}
                     </div>
 
-                    <div className="p-6">
-                      <h3 className={`text-[1.7rem] font-bold tracking-[-0.05em] text-[#d7dae0] ${displayClass}`}>
+                    <div className="flex flex-1 flex-col p-6">
+                      <h3 className="text-[1.7rem] font-bold tracking-[-0.05em] text-[#d7dae0]">
                         {project.title}
                       </h3>
                       <p className="mt-3 max-w-[520px] text-sm leading-7 text-[#5c6370]">
@@ -496,15 +406,20 @@ function App() {
                         ))}
                       </div>
 
-                      <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
+                      <div className="mt-auto flex items-center justify-between gap-4 pt-6">
                         {project.github === '#' ? (
-                          <div className={`text-[9px] text-[#5c6370] ${monoClass}`}>PRIVATE_REPO</div>
+                          <div
+                            className={`inline-flex min-h-9 items-center gap-2 text-[9px] text-[#5c6370] ${monoClass}`}
+                          >
+                            <span className="size-4" aria-hidden="true" />
+                            PRIVATE_REPO
+                          </div>
                         ) : (
                           <a
                             href={project.github}
                             target="_blank"
                             rel="noreferrer"
-                            className={`inline-flex items-center gap-2 text-[9px] text-[#abb2bf] transition hover:text-[#61afef] ${monoClass}`}
+                            className={`inline-flex min-h-9 items-center gap-2 text-[9px] text-[#abb2bf] transition hover:text-[#61afef] ${monoClass}`}
                           >
                             <Icons.code />
                             REPO_ACCESS
@@ -530,9 +445,9 @@ function App() {
           <section className="border-t border-[#3e4451]" id="experience">
             <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
               <div className="mb-8">
-                <div className={`text-[10px] text-[#c678dd] ${monoClass}`}>CAREER_HISTORY</div>
-                <h2 className={`mt-3 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0] ${displayClass}`}>
-                  DEPLOYMENT_HISTORY
+                <div className={`text-[10px] text-[#c678dd] ${monoClass}`}>DEPLOYMENT_HISTORY</div>
+                <h2 className="mt-3 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0]">
+                  EXPERIENCE
                 </h2>
               </div>
 
@@ -540,22 +455,34 @@ function App() {
                 {experiences.map((experience) => (
                   <article
                     key={experience.company}
-                    className={`grid gap-6 p-5 md:grid-cols-[180px_minmax(0,1fr)] ${panelClass}`}
+                    className={`grid gap-7 p-6 md:grid-cols-[240px_minmax(0,1fr)] md:gap-8 lg:p-7 ${panelClass}`}
                   >
-                    <div>
+                    <div className="flex flex-col items-start">
                       <div className={`text-[9px] text-[#61afef] ${monoClass}`}>TIME_WINDOW</div>
-                      <div className={`mt-3 text-xs text-[#abb2bf] ${monoClass}`}>{experience.period}</div>
+                      <div className={`mt-4 text-xs leading-7 text-[#abb2bf] ${monoClass}`}>
+                        {experience.period}
+                      </div>
+                      <div className="mt-5 flex flex-wrap gap-2">
+                        {experience.tech.map((item) => (
+                          <span
+                            key={`${experience.company}-${item}`}
+                            className={`border border-[#3e4451] bg-[#2c313a] px-2 py-1 text-[8px] text-[#61afef] ${monoClass}`}
+                          >
+                            {item}
+                          </span>
+                        ))}
+                      </div>
                     </div>
 
-                    <div>
-                      <h3 className={`text-[1.8rem] font-bold tracking-[-0.05em] text-[#d7dae0] ${displayClass}`}>
+                    <div className="md:border-l md:border-[#3e4451] md:pl-8">
+                      <h3 className="text-[1.7rem] font-bold leading-none tracking-[-0.05em] text-[#d7dae0] sm:text-[1.85rem]">
                         {experience.role}
                       </h3>
-                      <p className="mt-1 text-sm text-[#61afef]">{experience.company}</p>
+                      <p className="mt-3 text-sm text-[#61afef]">{experience.company}</p>
 
-                      <ul className="mt-5 space-y-3 text-sm leading-7 text-[#5c6370]">
+                      <ul className="mt-6 space-y-4 text-sm leading-7 text-[#5c6370]">
                         {experience.description.map((item) => (
-                          <li key={item} className="flex gap-3">
+                          <li key={item} className="flex gap-4">
                             <span className="mt-[11px] size-1.5 shrink-0 rounded-full bg-[#98c379]" />
                             <span>{item}</span>
                           </li>
@@ -570,40 +497,13 @@ function App() {
 
           <section className="border-t border-[#3e4451] bg-[#2c313a]/35" id="contact">
             <div className="mx-auto max-w-[1280px] px-4 py-14 sm:px-6 lg:px-8">
-              <div className={`text-[10px] text-[#c678dd] ${monoClass}`}>DIRECT_TRANSMISSION</div>
-              <h2 className={`mt-4 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0] ${displayClass}`}>
-                INIT_CONNECTION
+              <div className={`text-[10px] text-[#c678dd] ${monoClass}`}>INIT_CONNECTION</div>
+              <h2 className="mt-4 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0]">
+                CONTACT
               </h2>
 
-              <div className="mt-10 grid gap-12 lg:grid-cols-[minmax(0,1.15fr)_minmax(320px,0.85fr)]">
-                <div>
-                  <div className="grid gap-8 md:grid-cols-2">
-                    <div className="border-b border-[#3e4451] pb-4">
-                      <div className={`text-[8px] text-[#5c6370] ${monoClass}`}>IDENTIFICATION (NAME)</div>
-                      <div className="mt-3 text-sm text-[#abb2bf]">Aayaan Sahu</div>
-                    </div>
-                    <div className="border-b border-[#3e4451] pb-4">
-                      <div className={`text-[8px] text-[#5c6370] ${monoClass}`}>PROTOCOL (EMAIL)</div>
-                      <div className="mt-3 text-sm text-[#abb2bf]">aasahu2@illinois.edu</div>
-                    </div>
-                  </div>
-
-                  <div className="mt-10 border-b border-[#3e4451] pb-4">
-                    <div className={`text-[8px] text-[#5c6370] ${monoClass}`}>INPUT_MESSAGE</div>
-                    <div className="mt-3 text-sm text-[#5c6370]">
-                      Enter_command_or_query_here...
-                    </div>
-                  </div>
-
-                  <a
-                    href="mailto:aasahu2@illinois.edu"
-                    className={`mt-10 inline-flex items-center gap-2 text-[10px] text-[#61afef] transition hover:text-[#8abcf2] ${monoClass}`}
-                  >
-                    EXECUTE_TRANSMISSION
-                    <span className="text-base normal-case">→</span>
-                  </a>
-
-                  <div className="mt-12 grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
+              <div className="mt-10 grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_380px] lg:gap-12">
+                <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
                     {contacts.map((contact) => {
                       const Icon = Icons[contact.icon];
 
@@ -613,28 +513,31 @@ function App() {
                           href={contact.href}
                           target="_blank"
                           rel="noreferrer"
-                          className="group border-b border-[#3e4451] pb-4"
+                          className="group flex min-h-[154px] flex-col items-start justify-between border border-[#3e4451] bg-[#21252b]/80 px-5 py-5 transition hover:border-[#61afef]/60 hover:bg-[#2c313a]"
                         >
-                          <div className="flex items-center gap-2 text-[#61afef]">
-                            <Icon />
+                          <div className="flex items-center gap-3 text-[#61afef]">
+                            <div className="grid size-11 place-items-center border border-[#61afef]/35 bg-[#61afef]/10 transition group-hover:border-[#61afef]/60 group-hover:bg-[#61afef]/15">
+                              <div className="text-[#61afef] [&>svg]:size-6">
+                                <Icon />
+                              </div>
+                            </div>
                             <span className={`text-[8px] ${monoClass}`}>{contact.label}</span>
                           </div>
-                          <div className="mt-3 text-sm text-[#abb2bf] transition group-hover:text-[#61afef]">
-                            {contact.value}
-                          </div>
+                          <span className={`text-[9px] text-[#5c6370] transition group-hover:text-[#61afef] ${monoClass}`}>
+                            OPEN_LINK
+                          </span>
                         </a>
                       );
                     })}
-                  </div>
                 </div>
 
-                <div className={`group hover-pop-card flex flex-col justify-between gap-6 p-6 ${panelClass}`}>
+                <div className={`group hover-pop-card flex h-full flex-col justify-center gap-6 self-stretch p-6 lg:min-h-[240px] ${panelClass}`}>
                   <div>
                     <div className={`text-[10px] text-[#61afef] ${monoClass}`}>SYSTEM_READY</div>
                     <h3 className={`mt-4 text-2xl font-bold text-[#d7dae0] ${displayClass}`}>
                       Open to building, research, and interesting technical problems.
                     </h3>
-                    <p className="mt-4 text-sm leading-7 text-[#5c6370]">
+                    <p className={`mt-4 text-sm leading-7 text-[#5c6370] ${readingClass}`}>
                       Reach out if you want to talk about AI, machine learning, full-stack product
                       work, or opportunities where shipping matters.
                     </p>
@@ -654,7 +557,7 @@ function App() {
           </section>
         </main>
 
-        <footer className="border-t border-[#3e4451] bg-[#21252b]">
+        {/* <footer className="border-t border-[#3e4451] bg-[#21252b]">
           <div
             className={`mx-auto flex max-w-[1280px] flex-col gap-2 px-4 py-6 text-[8px] text-[#5c6370] sm:flex-row sm:items-center sm:justify-between sm:px-6 lg:px-8 ${monoClass}`}
           >
@@ -662,7 +565,7 @@ function App() {
             <span>AAYAAN SAHU // FULL_SYSTEM_OPERATIONAL</span>
             <span>2026</span>
           </div>
-        </footer>
+        </footer> */}
       </div>
 
       <a
