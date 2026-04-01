@@ -523,6 +523,18 @@ const Icons = {
       />
     </svg>
   ),
+  lock: () => (
+    <svg viewBox="0 0 24 24" aria-hidden="true" className="size-4">
+      <path
+        d="M16.5 10.5V7.875a4.5 4.5 0 1 0-9 0V10.5m-.75 0h10.5A1.5 1.5 0 0 1 18.75 12v7.5A1.5 1.5 0 0 1 17.25 21h-10.5a1.5 1.5 0 0 1-1.5-1.5V12a1.5 1.5 0 0 1 1.5-1.5Z"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="1.5"
+      />
+    </svg>
+  ),
 };
 
 function App() {
@@ -762,7 +774,7 @@ function App() {
                               <div
                                 className={`inline-flex min-h-9 items-center gap-2 text-[9px] text-[#5c6370] ${monoClass}`}
                               >
-                                <span className="size-4" aria-hidden="true" />
+                                <Icons.lock />
                                 PRIVATE_REPO
                               </div>
                             ) : (
