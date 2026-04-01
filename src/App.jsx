@@ -1,3 +1,4 @@
+import { LazyMotion, domAnimation, motion as Motion, useReducedMotion } from 'motion/react';
 import { useState } from 'react';
 
 const experiences = [
@@ -123,6 +124,83 @@ const monoClass = "font-['JetBrains_Mono'] uppercase tracking-[0.22em]";
 const displayClass = "font-['Space_Grotesk']";
 const readingClass = "font-['Inter']";
 const bodyClass = "font-['JetBrains_Mono']";
+const motionEase = [0.22, 1, 0.36, 1];
+
+const heroNameVariant = {
+  hidden: { opacity: 0, y: 18, filter: 'blur(10px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.24, ease: motionEase, delay: 0.04 },
+  },
+};
+
+const heroDetailVariant = {
+  hidden: { opacity: 0, y: 14, filter: 'blur(8px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.22, ease: motionEase, delay: 0.16 },
+  },
+};
+
+const heroNavVariant = {
+  hidden: { opacity: 0, y: -12, filter: 'blur(8px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.22, ease: motionEase, delay: 0.28 },
+  },
+};
+
+const heroActionsVariant = {
+  hidden: { opacity: 0, y: 12 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.2, ease: motionEase, delay: 0.24 },
+  },
+};
+
+const sectionHeadingVariant = {
+  hidden: { opacity: 0, y: 18, filter: 'blur(8px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.22, ease: motionEase },
+  },
+};
+
+const rowContainerVariant = {
+  hidden: { opacity: 0, y: 22 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.24, ease: motionEase, staggerChildren: 0.08 },
+  },
+};
+
+const itemVariant = {
+  hidden: { opacity: 0, y: 18, filter: 'blur(8px)' },
+  show: {
+    opacity: 1,
+    y: 0,
+    filter: 'blur(0px)',
+    transition: { duration: 0.22, ease: motionEase },
+  },
+};
+
+function chunkItems(items, size) {
+  const rows = [];
+  for (let index = 0; index < items.length; index += size) {
+    rows.push(items.slice(index, index + size));
+  }
+  return rows;
+}
 
 const Icons = {
   mail: () => (
@@ -241,6 +319,23 @@ const Icons = {
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const shouldReduceMotion = useReducedMotion();
+  const projectsByRow = chunkItems(projects, 2);
+
+  const heroMotionProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: 'hidden',
+        animate: 'show',
+      };
+
+  const scrollMotionProps = shouldReduceMotion
+    ? {}
+    : {
+        initial: 'hidden',
+        whileInView: 'show',
+        viewport: { once: true, amount: 0.25 },
+      };
 
   const scrollToSection = (id) => {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -248,18 +343,23 @@ function App() {
   };
 
   return (
-    <div
-      className={`relative min-h-screen overflow-x-hidden bg-[#282c34] text-[#abb2bf] ${bodyClass}`}
-    >
-      <div className="pointer-events-none fixed inset-0 bg-[#282c34]" />
-      <div className="pointer-events-none fixed inset-0 opacity-40 [background-image:radial-gradient(circle,rgba(92,99,112,0.45)_1px,transparent_1px)] [background-size:18px_18px]" />
+    <LazyMotion features={domAnimation}>
+      <div
+        className={`relative min-h-screen overflow-x-hidden bg-[#282c34] text-[#abb2bf] ${bodyClass}`}
+      >
+        <div className="pointer-events-none fixed inset-0 bg-[#282c34]" />
+        <div className="pointer-events-none fixed inset-0 opacity-40 [background-image:radial-gradient(circle,rgba(92,99,112,0.45)_1px,transparent_1px)] [background-size:18px_18px]" />
 
-      <div className="relative z-10">
+        <div className="relative z-10">
         <header className="sticky top-0 z-30 border-b border-[#3e4451] bg-[#282c34]/90 backdrop-blur-xl">
           <div className="mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
             <div />
 
-            <nav className="hidden items-center justify-center gap-6 md:flex">
+            <Motion.nav
+              className="hidden items-center justify-center gap-6 md:flex"
+              variants={heroNavVariant}
+              {...heroMotionProps}
+            >
               {navItems.map((item, index) => (
                 <button
                   key={item.id}
@@ -274,9 +374,13 @@ function App() {
                   {item.label}
                 </button>
               ))}
-            </nav>
+            </Motion.nav>
 
-            <div className="flex items-center justify-end gap-3">
+            <Motion.div
+              className="flex items-center justify-end gap-3"
+              variants={heroNavVariant}
+              {...heroMotionProps}
+            >
               <a
                 href="/Resume.pdf"
                 target="_blank"
@@ -295,7 +399,7 @@ function App() {
               >
                 {menuOpen ? <Icons.close /> : <Icons.menu />}
               </button>
-            </div>
+            </Motion.div>
           </div>
 
           {menuOpen ? (
@@ -322,26 +426,48 @@ function App() {
             className="mx-auto flex min-h-[calc(100vh-68px)] max-w-[1280px] items-center px-4 pb-20 pt-14 sm:px-6 lg:px-8"
           >
             <div className="mx-auto max-w-[900px] text-center">
-              <div
+              <Motion.div
                 className={`mx-auto inline-flex items-center border border-[#c678dd]/40 bg-[#c678dd]/8 px-3 py-1 text-[9px] text-[#c678dd] ${monoClass}`}
+                variants={heroDetailVariant}
+                {...heroMotionProps}
               >
                 GRADUATING: 2028
-              </div>
+              </Motion.div>
 
-              <h1
+              <Motion.h1
                 className={`mt-8 text-[clamp(3.4rem,10vw,6.4rem)] font-bold leading-[0.88] tracking-[-0.08em] text-[#d7dae0] ${displayClass}`}
+                variants={heroNameVariant}
+                {...heroMotionProps}
               >
-                Aayaan Sahu.
-                <span className="block text-[#61afef]">CS + Economics</span>
-                <span className="block text-[#d7dae0]">@ UIUC.</span>
-              </h1>
+                <Motion.span className="block" variants={heroNameVariant} {...heroMotionProps}>
+                  Aayaan Sahu.
+                </Motion.span>
+                <Motion.span
+                  className="block text-[#61afef]"
+                  variants={heroDetailVariant}
+                  {...heroMotionProps}
+                >
+                  CS + Economics
+                </Motion.span>
+                <Motion.span
+                  className="block text-[#d7dae0]"
+                  variants={heroDetailVariant}
+                  {...heroMotionProps}
+                >
+                  @ UIUC.
+                </Motion.span>
+              </Motion.h1>
 
               {/* <p className="mx-auto mt-6 max-w-[620px] text-sm leading-7 text-[#5c6370] sm:text-[15px]">
                 Building with LLMs, machine learning, and full-stack systems. I care about making
                 technical ideas real, useful, and shippable.
               </p> */}
 
-              <div className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Motion.div
+                className="mt-10 flex flex-col items-center justify-center gap-4 sm:flex-row"
+                variants={heroActionsVariant}
+                {...heroMotionProps}
+              >
                 <button
                   type="button"
                   onClick={() => scrollToSection('projects')}
@@ -356,13 +482,17 @@ function App() {
                 >
                   EXECUTE_CONTACT
                 </button>
-              </div>
+              </Motion.div>
             </div>
           </section>
 
           <section className="border-t border-[#3e4451]" id="projects">
             <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
-              <div className="mb-8 flex items-end justify-between gap-4">
+              <Motion.div
+                className="mb-8 flex items-end justify-between gap-4"
+                variants={sectionHeadingVariant}
+                {...scrollMotionProps}
+              >
                 <div>
                   <div className={`text-[10px] text-[#61afef] ${monoClass}`}>SELECTED_PROJECTS</div>
                   <h2 className="mt-3 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0]">
@@ -370,73 +500,88 @@ function App() {
                   </h2>
                 </div>
 
-              </div>
+              </Motion.div>
 
-              <div className="grid gap-6 lg:grid-cols-2">
-                {projects.map((project) => (
-                  <article
-                    key={project.title}
-                    className={`group hover-pop-card flex h-full flex-col overflow-hidden ${panelClass}`}
+              <div className="space-y-6">
+                {projectsByRow.map((row, rowIndex) => (
+                  <Motion.div
+                    key={`project-row-${rowIndex}`}
+                    className="grid gap-6 lg:grid-cols-2"
+                    variants={rowContainerVariant}
+                    {...scrollMotionProps}
+                    transition={
+                      shouldReduceMotion
+                        ? undefined
+                        : { duration: 0.24, ease: motionEase, delay: rowIndex * 0.06, staggerChildren: 0.08 }
+                    }
                   >
-                    <div className="relative h-[300px] overflow-hidden border-b border-[#3e4451] bg-[#1b1d23]">
-                      <img
-                        src={project.image}
-                        alt={project.title}
-                        className="h-full w-full object-cover grayscale transition duration-300 group-hover:grayscale-0 group-focus-within:grayscale-0"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#21252b] via-[#21252b]/30 to-transparent" />
-                    </div>
+                    {row.map((project) => (
+                      <Motion.article
+                        key={project.title}
+                        variants={itemVariant}
+                        className={`group hover-pop-card flex h-full flex-col overflow-hidden ${panelClass}`}
+                      >
+                        <div className="relative h-[300px] overflow-hidden border-b border-[#3e4451] bg-[#1b1d23]">
+                          <img
+                            src={project.image}
+                            alt={project.title}
+                            className="h-full w-full object-cover grayscale transition duration-300 group-hover:grayscale-0 group-focus-within:grayscale-0"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#21252b] via-[#21252b]/30 to-transparent" />
+                        </div>
 
-                    <div className="flex flex-1 flex-col p-6">
-                      <h3 className="text-[1.7rem] font-bold tracking-[-0.05em] text-[#d7dae0]">
-                        {project.title}
-                      </h3>
-                      <p className="mt-3 max-w-[520px] text-sm leading-7 text-[#5c6370]">
-                        {project.description}
-                      </p>
+                        <div className="flex flex-1 flex-col p-6">
+                          <h3 className="text-[1.7rem] font-bold tracking-[-0.05em] text-[#d7dae0]">
+                            {project.title}
+                          </h3>
+                          <p className="mt-3 max-w-[520px] text-sm leading-7 text-[#5c6370]">
+                            {project.description}
+                          </p>
 
-                      <div className="mt-5 flex flex-wrap gap-2">
-                        {project.tech.map((item) => (
-                          <span
-                            key={`${project.title}-${item}`}
-                            className={`border border-[#3e4451] bg-[#2c313a] px-2 py-1 text-[8px] text-[#61afef] ${monoClass}`}
-                          >
-                            {item}
-                          </span>
-                        ))}
-                      </div>
-
-                      <div className="mt-auto flex items-center justify-between gap-4 pt-6">
-                        {project.github === '#' ? (
-                          <div
-                            className={`inline-flex min-h-9 items-center gap-2 text-[9px] text-[#5c6370] ${monoClass}`}
-                          >
-                            <span className="size-4" aria-hidden="true" />
-                            PRIVATE_REPO
+                          <div className="mt-5 flex flex-wrap gap-2">
+                            {project.tech.map((item) => (
+                              <span
+                                key={`${project.title}-${item}`}
+                                className={`border border-[#3e4451] bg-[#2c313a] px-2 py-1 text-[8px] text-[#61afef] ${monoClass}`}
+                              >
+                                {item}
+                              </span>
+                            ))}
                           </div>
-                        ) : (
-                          <a
-                            href={project.github}
-                            target="_blank"
-                            rel="noreferrer"
-                            className={`inline-flex min-h-9 items-center gap-2 text-[9px] text-[#abb2bf] transition hover:text-[#61afef] ${monoClass}`}
-                          >
-                            <Icons.code />
-                            REPO_ACCESS
-                          </a>
-                        )}
 
-                        <a
-                          href={project.live}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex size-9 items-center justify-center border border-[#3e4451] bg-[#21252b] text-[#61afef] transition hover:border-[#61afef]/60 hover:bg-[#61afef]/10"
-                        >
-                          <Icons.external />
-                        </a>
-                      </div>
-                    </div>
-                  </article>
+                          <div className="mt-auto flex items-center justify-between gap-4 pt-6">
+                            {project.github === '#' ? (
+                              <div
+                                className={`inline-flex min-h-9 items-center gap-2 text-[9px] text-[#5c6370] ${monoClass}`}
+                              >
+                                <span className="size-4" aria-hidden="true" />
+                                PRIVATE_REPO
+                              </div>
+                            ) : (
+                              <a
+                                href={project.github}
+                                target="_blank"
+                                rel="noreferrer"
+                                className={`inline-flex min-h-9 items-center gap-2 text-[9px] text-[#abb2bf] transition hover:text-[#61afef] ${monoClass}`}
+                              >
+                                <Icons.code />
+                                REPO_ACCESS
+                              </a>
+                            )}
+
+                            <a
+                              href={project.live}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="inline-flex size-9 items-center justify-center border border-[#3e4451] bg-[#21252b] text-[#61afef] transition hover:border-[#61afef]/60 hover:bg-[#61afef]/10"
+                            >
+                              <Icons.external />
+                            </a>
+                          </div>
+                        </div>
+                      </Motion.article>
+                    ))}
+                  </Motion.div>
                 ))}
               </div>
             </div>
@@ -444,17 +589,27 @@ function App() {
 
           <section className="border-t border-[#3e4451]" id="experience">
             <div className="mx-auto max-w-[1280px] px-4 py-12 sm:px-6 lg:px-8">
-              <div className="mb-8">
+              <Motion.div className="mb-8" variants={sectionHeadingVariant} {...scrollMotionProps}>
                 <div className={`text-[10px] text-[#c678dd] ${monoClass}`}>DEPLOYMENT_HISTORY</div>
                 <h2 className="mt-3 text-4xl font-bold tracking-[-0.06em] text-[#d7dae0]">
                   EXPERIENCE
                 </h2>
-              </div>
+              </Motion.div>
 
-              <div className="space-y-4">
+              <Motion.div
+                className="space-y-4"
+                variants={rowContainerVariant}
+                {...scrollMotionProps}
+                transition={
+                  shouldReduceMotion
+                    ? undefined
+                    : { duration: 0.24, ease: motionEase, staggerChildren: 0.1, delayChildren: 0.04 }
+                }
+              >
                 {experiences.map((experience) => (
-                  <article
+                  <Motion.article
                     key={experience.company}
+                    variants={itemVariant}
                     className={`grid gap-7 p-6 md:grid-cols-[240px_minmax(0,1fr)] md:gap-8 lg:p-7 ${panelClass}`}
                   >
                     <div className="flex flex-col items-start">
@@ -489,9 +644,9 @@ function App() {
                         ))}
                       </ul>
                     </div>
-                  </article>
+                  </Motion.article>
                 ))}
-              </div>
+              </Motion.div>
             </div>
           </section>
 
@@ -566,15 +721,16 @@ function App() {
             <span>2026</span>
           </div>
         </footer> */}
-      </div>
+        </div>
 
-      <a
-        href="mailto:aasahu2@illinois.edu"
-        className="fixed bottom-5 right-5 z-20 grid size-12 place-items-center rounded-md border border-[#61afef] bg-[#61afef] text-[#282c34] shadow-[0_16px_40px_rgba(97,175,239,0.25)] transition hover:bg-[#8abcf2]"
-      >
-        <Icons.mail />
-      </a>
-    </div>
+        <a
+          href="mailto:aasahu2@illinois.edu"
+          className="fixed bottom-5 right-5 z-20 grid size-12 place-items-center rounded-md border border-[#61afef] bg-[#61afef] text-[#282c34] shadow-[0_16px_40px_rgba(97,175,239,0.25)] transition hover:bg-[#8abcf2]"
+        >
+          <Icons.mail />
+        </a>
+      </div>
+    </LazyMotion>
   );
 }
 
