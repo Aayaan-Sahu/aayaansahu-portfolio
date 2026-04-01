@@ -1,5 +1,5 @@
 import { LazyMotion, domAnimation, motion as Motion, useReducedMotion } from 'motion/react';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 const experiences = [
   {
@@ -125,6 +125,12 @@ const displayClass = "font-['Space_Grotesk']";
 const readingClass = "font-['Inter']";
 const bodyClass = "font-['JetBrains_Mono']";
 const motionEase = [0.22, 1, 0.36, 1];
+const dotSpacing = 18;
+const dotRadius = 1;
+const dotBaseColor = { red: 126, green: 134, blue: 150, alpha: 0.62 };
+const dotHighlightColor = { red: 214, green: 222, blue: 238, alpha: 0.98 };
+const dotInfluenceRadius = 160;
+const dotHighlightRadius = 170;
 
 const heroNameVariant = {
   hidden: { opacity: 0, y: 18, filter: 'blur(10px)' },
@@ -200,6 +206,208 @@ function chunkItems(items, size) {
     rows.push(items.slice(index, index + size));
   }
   return rows;
+}
+
+function smoothstep(value) {
+  return value * value * (3 - 2 * value);
+}
+
+function mixDotColor(amount) {
+  const intensity = Math.max(0, Math.min(1, amount));
+  const red = Math.round(dotBaseColor.red + (dotHighlightColor.red - dotBaseColor.red) * intensity);
+  const green = Math.round(
+    dotBaseColor.green + (dotHighlightColor.green - dotBaseColor.green) * intensity,
+  );
+  const blue = Math.round(dotBaseColor.blue + (dotHighlightColor.blue - dotBaseColor.blue) * intensity);
+  const alpha = dotBaseColor.alpha + (dotHighlightColor.alpha - dotBaseColor.alpha) * intensity;
+
+  return `rgba(${red}, ${green}, ${blue}, ${alpha})`;
+}
+
+function hash2D(x, y, seed) {
+  const value = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453123;
+  return value - Math.floor(value);
+}
+
+function valueNoise2D(x, y, seed) {
+  const x0 = Math.floor(x);
+  const y0 = Math.floor(y);
+  const tx = x - x0;
+  const ty = y - y0;
+  const u = smoothstep(tx);
+  const v = smoothstep(ty);
+  const a = hash2D(x0, y0, seed);
+  const b = hash2D(x0 + 1, y0, seed);
+  const c = hash2D(x0, y0 + 1, seed);
+  const d = hash2D(x0 + 1, y0 + 1, seed);
+  const top = a + (b - a) * u;
+  const bottom = c + (d - c) * u;
+
+  return top + (bottom - top) * v;
+}
+
+function layeredNoise2D(x, y, seed) {
+  let amplitude = 0.6;
+  let frequency = 1;
+  let total = 0;
+  let amplitudeSum = 0;
+
+  for (let octave = 0; octave < 3; octave += 1) {
+    total += valueNoise2D(x * frequency, y * frequency, seed + octave * 17.13) * amplitude;
+    amplitudeSum += amplitude;
+    amplitude *= 0.5;
+    frequency *= 2;
+  }
+
+  return total / amplitudeSum;
+}
+
+function DotBackground({ shouldReduceMotion }) {
+  const canvasRef = useRef(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return undefined;
+    }
+
+    const context = canvas.getContext('2d');
+    if (!context) {
+      return undefined;
+    }
+
+    const pointer = {
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
+      active: false,
+    };
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    let frameId = 0;
+    let lastFrameTime = 0;
+
+    const resizeCanvas = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      const devicePixelRatio = Math.min(window.devicePixelRatio || 1, 2);
+
+      canvas.width = Math.round(width * devicePixelRatio);
+      canvas.height = Math.round(height * devicePixelRatio);
+      canvas.style.width = `${width}px`;
+      canvas.style.height = `${height}px`;
+      context.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+    };
+
+    const handlePointerMove = (event) => {
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+      pointer.active = true;
+    };
+
+    const handlePointerLeave = () => {
+      pointer.active = false;
+    };
+
+    const drawDots = (time) => {
+      context.clearRect(0, 0, width, height);
+      context.fillStyle = mixDotColor(0);
+
+      const columns = Math.ceil(width / dotSpacing) + 1;
+      const rows = Math.ceil(height / dotSpacing) + 1;
+      const timeOffset = time * 0.00008;
+
+      if (shouldReduceMotion) {
+        for (let row = 0; row < rows; row += 1) {
+          const baseY = row * dotSpacing;
+          for (let column = 0; column < columns; column += 1) {
+            const baseX = column * dotSpacing;
+
+            context.beginPath();
+            context.arc(baseX, baseY, dotRadius, 0, Math.PI * 2);
+            context.fill();
+          }
+        }
+        return;
+      }
+
+      for (let row = 0; row < rows; row += 1) {
+        const baseY = row * dotSpacing;
+        for (let column = 0; column < columns; column += 1) {
+          const baseX = column * dotSpacing;
+          const noiseX =
+            layeredNoise2D(baseX * 0.018 + timeOffset, baseY * 0.018 + timeOffset * 0.55, 11) -
+            0.5;
+          const noiseY =
+            layeredNoise2D(baseX * 0.018 - timeOffset * 0.45, baseY * 0.018 + timeOffset, 29) -
+            0.5;
+
+          let offsetX = noiseX * 3.2;
+          let offsetY = noiseY * 3.2;
+          let highlightStrength = 0;
+
+          if (pointer.active) {
+            const deltaX = baseX - pointer.x;
+            const deltaY = baseY - pointer.y;
+            const distance = Math.hypot(deltaX, deltaY);
+
+            if (distance < dotInfluenceRadius) {
+              const distanceRatio = 1 - distance / dotInfluenceRadius;
+              const influence = distanceRatio * distanceRatio * 3;
+              const safeDistance = Math.max(distance, 1);
+
+              offsetX += (deltaX / safeDistance) * influence;
+              offsetY += (deltaY / safeDistance) * influence;
+            }
+
+            if (distance < dotHighlightRadius) {
+              const highlightRatio = 1 - distance / dotHighlightRadius;
+              highlightStrength = smoothstep(highlightRatio) * 0.9;
+            }
+          }
+
+          context.fillStyle = mixDotColor(highlightStrength);
+          context.beginPath();
+          context.arc(baseX + offsetX, baseY + offsetY, dotRadius, 0, Math.PI * 2);
+          context.fill();
+        }
+      }
+    };
+
+    const animate = (time) => {
+      if (shouldReduceMotion) {
+        drawDots(time);
+        return;
+      }
+
+      if (time - lastFrameTime >= 1000 / 30) {
+        lastFrameTime = time;
+        drawDots(time);
+      }
+
+      frameId = window.requestAnimationFrame(animate);
+    };
+
+    resizeCanvas();
+    drawDots(0);
+
+    window.addEventListener('resize', resizeCanvas);
+    window.addEventListener('pointermove', handlePointerMove);
+    window.addEventListener('pointerleave', handlePointerLeave);
+
+    if (!shouldReduceMotion) {
+      frameId = window.requestAnimationFrame(animate);
+    }
+
+    return () => {
+      window.removeEventListener('resize', resizeCanvas);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('pointerleave', handlePointerLeave);
+      window.cancelAnimationFrame(frameId);
+    };
+  }, [shouldReduceMotion]);
+
+  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 opacity-50" />;
 }
 
 const Icons = {
@@ -348,12 +556,12 @@ function App() {
         className={`relative min-h-screen overflow-x-hidden bg-[#282c34] text-[#abb2bf] ${bodyClass}`}
       >
         <div className="pointer-events-none fixed inset-0 bg-[#282c34]" />
-        <div className="pointer-events-none fixed inset-0 opacity-40 [background-image:radial-gradient(circle,rgba(92,99,112,0.45)_1px,transparent_1px)] [background-size:18px_18px]" />
+        <DotBackground shouldReduceMotion={shouldReduceMotion} />
 
         <div className="relative z-10">
         <header className="sticky top-0 z-30 border-b border-[#3e4451] bg-[#282c34]/90 backdrop-blur-xl">
-          <div className="mx-auto grid max-w-[1280px] grid-cols-[1fr_auto_1fr] items-center gap-4 px-4 py-4 sm:px-6 lg:px-8">
-            <div />
+          <div className="mx-auto flex max-w-[1280px] items-center justify-end gap-4 px-4 py-4 sm:px-6 md:grid md:grid-cols-[1fr_auto_1fr] md:justify-normal lg:px-8">
+            <div className="hidden md:block" />
 
             <Motion.nav
               className="hidden items-center justify-center gap-6 md:flex"
@@ -569,14 +777,16 @@ function App() {
                               </a>
                             )}
 
-                            <a
-                              href={project.live}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="inline-flex size-9 items-center justify-center border border-[#3e4451] bg-[#21252b] text-[#61afef] transition hover:border-[#61afef]/60 hover:bg-[#61afef]/10"
-                            >
-                              <Icons.external />
-                            </a>
+                            {project.live === '#' ? <span /> : (
+                              <a
+                                href={project.live}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="inline-flex size-9 items-center justify-center border border-[#3e4451] bg-[#21252b] text-[#61afef] transition hover:border-[#61afef]/60 hover:bg-[#61afef]/10"
+                              >
+                                <Icons.external />
+                              </a>
+                            )}
                           </div>
                         </div>
                       </Motion.article>
